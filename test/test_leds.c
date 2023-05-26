@@ -40,7 +40,6 @@ void test_todos_los_leds_inician_apagados(void) {
   puerto_virtual = 0xFFFF;
   TEST_ASSERT_TRUE(LedsInit(&puerto_virtual));
   TEST_ASSERT_EQUAL_HEX16(0x0000, puerto_virtual);
-  // TEST_FAIL_MESSAGE("Empezamos...");
 }
 
 // Con todos los leds apagados, prendo led 2 y verifico que el bit 1 vale 1.
@@ -70,6 +69,7 @@ void test_prendo_prendo_apago_apago(void) {
 void test_prendo_y_leo(void) {
   LedsTurnOnSingle(4);
   TEST_ASSERT_TRUE(LedsIsOn(4));
+  TEST_ASSERT_EQUAL_HEX16(0x0008, puerto_virtual);
 }
 
 // Apago un led, consulto el estado y tiene que estar apagado.
@@ -77,12 +77,14 @@ void test_apago_y_leo(void) {
   LedsTurnOnSingle(4);
   LedsTurnOffSingle(4);
   TEST_ASSERT_FALSE(LedsIsOn(4));
+  TEST_ASSERT_EQUAL_HEX16(0x0000, puerto_virtual);
 }
 
 // Con todos los leds apagados, enciendo todos los leds 
 // y verifico que se enciendan.
 void test_prendo_todo_y_leo(void) {
   LedsTurnOnAll();
+  TEST_ASSERT_EQUAL_HEX16(ALL_LEDS_ON, puerto_virtual);
   TEST_ASSERT_TRUE(LedsIsOn(1));
   TEST_ASSERT_TRUE(LedsIsOn(2));
   TEST_ASSERT_TRUE(LedsIsOn(3));
@@ -105,6 +107,7 @@ void test_prendo_todo_y_leo(void) {
 void test_apago_todo_y_leo(void) {
   LedsTurnOnAll();
   LedsTurnOffAll();
+  TEST_ASSERT_EQUAL_HEX16(ALL_LEDS_OFF, puerto_virtual);
   TEST_ASSERT_FALSE(LedsIsOn(1));
   TEST_ASSERT_FALSE(LedsIsOn(2));
   TEST_ASSERT_FALSE(LedsIsOn(3));
